@@ -1,10 +1,12 @@
 package com.pandemia.covinpl.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.pandemia.covinpl.R
 import com.pandemia.covinpl.models.CovidModel
@@ -36,14 +38,24 @@ class CovidViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
     fun bind(data: CovidModel) {
 
         //Glide.with(itemView.context).load("http://image.tmdb.org/t/p/w500${movie.poster_path}").into(photo)
-        totalCases.text = "Total Cases: "+data.cases.toString()
-        todayCases.text = "Today Cases: "+data.todayCases.toString()
-        todayDeaths.text = "Today Deaths : "+data.todayDeaths.toString()
-        countries.text=data.country
+        totalCases.text = "Total Cases: " + data.cases.toString()
+        todayCases.text = "Today Cases: " + data.todayCases.toString()
+        todayDeaths.text = "Today Deaths : " + data.todayDeaths.toString()
+        countries.text = data.country
 
-        itemView.setOnClickListener(){
-            Toast.makeText(itemView.context,"CLicked",Toast.LENGTH_LONG).show()
+        val summaryData = "Total Cases: " + data.cases.toString() + "\n"+"Today Cases: " + data.todayCases.toString() + "\n"+"Today Deaths : " + data.todayDeaths.toString()
+
+        itemView.setOnLongClickListener() {
+
+            val intent = Intent()
+            intent.action = Intent.ACTION_SEND
+            intent.putExtra(Intent.EXTRA_TEXT, summaryData)
+            intent.type = "text/plain"
+            itemView.context.startActivity(Intent.createChooser(intent, "Share To:"))
+
+            return@setOnLongClickListener true
         }
+
     }
 
 }
